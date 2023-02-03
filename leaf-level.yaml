@@ -1,0 +1,315 @@
+description: "A collection of sources which provide leaf-level data for
+photosynthesis. Where possible, column meanings and units are included in the
+metadata for each source."
+
+sources:
+
+  Lin2015:
+    args:
+      csv_kwargs:
+        dtype:
+          PARin: float64
+        encoding: ISO-8859-1
+        na_values: -9999.0
+      urlpath: https://figshare.com/ndownloader/files/1886204
+    description: "This database accompanies the publication 'Lin et al. (2015)
+    Optimal stomatal behaviour around the world. Nature Climate Change, 5,
+    459-464. For details on column definitions and units, please see the
+    [entry](https://figshare.com/articles/dataset/Optimal_stomatal_behaviour_around_the_world/1304289)
+    on figshare." 
+    driver: intake.source.csv.CSVSource 
+    metadata:
+      CO2S:
+        name: CO2 concentration at leaf surface
+        units: ppm
+      Cond:
+        name: Stomatal conductance
+        units: mol m-2 s-1
+      Datacontrib:
+        name: Data contributor
+      Growthcond:
+        name: Growth condition
+      latitude:
+        name: Site latitude
+        units: Decimal degrees
+      Leafspan:
+        options: evergreen, deciduous
+      Location:
+        name: Site description
+      longitude:
+        name: Site longitude
+        units: Decimal degrees
+      opt:
+        name: Growing under ambient or stressed condition
+        options: opt, non-opt
+      PARin:
+        name: Photosynthetically active radiation in cuvette
+        units: 1e-6 mol m-2 s-1
+      Pathway:
+        options: C3, C4, CAM
+      Photo:
+        name: Photosynthetic rate
+        units: 1e-6 mol m-2 s-1
+      Plantform:
+        options: tree, shrub, grass, crop, savanna
+      Species:
+        name: Species name
+      Tleaf:
+        name: Leaf temperature
+        units: degC
+      Tregion:
+        options: arctic, boreal, temperate, tropical
+      Trmmol:
+        name: Leaf transpiration
+        units: 1e-3 mol m-2 s-1
+      Type:
+        options: gymnosperm, angiosperm
+      VPD:
+        name: Vapour pressure deficit
+        units: kPa
+      Wregion:
+        options: arid, semi-arid, dry sub-humid, humid
+      Wregion2:
+        name: Moisture index
+        units: '1'
+
+  Anderegg2018:
+    args:
+      csv_kwargs:
+        dtype:
+          PARin: float64
+          Comments: str
+          OriginalFile: str
+        na_values: -9999.0
+      urlpath: https://figshare.com/ndownloader/files/10920236
+    description: "This database accompanies the publication 'Anderegg, et al.
+    (2018) Woody plants optimise stomatal behaviour relative to hydraulic risk.
+    Ecology Letters. For more details, please see the
+    [entry](https://figshare.com/articles/dataset/AllData_EcologyLetters_Figshare_v1_3-18_csv/6066449/1)
+    on figshare. As per a private communication, the data columns were selected
+    to match the meaning and units of the Lin2015 data and are replicated here
+    in the metadata. However, some columns in this dataset are not found in the
+    version of Lin2015 we point to here. In this case we have provided a guess
+    at meanings and units based on orders of magnitude." 
+    driver: intake.source.csv.CSVSource
+    metadata:
+      BLCond:
+        note: not used, all NaN's
+      canopyposition:
+        options: top, Top, None
+      Ci:
+        name: CO2 concentration inside the leaf
+        units: ppm
+      CO2S:
+        name: CO2 concentration at leaf surface
+        units: ppm
+      Comments:
+        name: Measurement comments
+      Cond:
+        name: Stomatal conductance
+        units: mol m-2 s-1
+      Datacontrib:
+        name: Data contributor
+      Date:
+        name: Date collected
+      fitgroup:
+        name: Measurement comments
+      Funtype:
+        options: temperate evergreen, Temperate conifer, Temperate evergreen, None
+      GrowthCa:
+        options: ambient, Ambient, None
+      Growthcond:
+        name: Growth condition
+      GrowthTair:
+        options: ambient, None
+      Instrument:
+        options: Licor 6400(2cm_ Fluo), Licor 6400, None
+      LAI:
+        name: Leaf area index
+        options: 1.2, 1.9, 2.8
+      latitude:
+        name: Site latitude
+        units: degrees_north
+      Leafspan:
+        options: evergreen, deciduous
+      LightSource:
+        name: not used, all Nan's
+      Location:
+        name: Site description
+      longitude:
+        name: Site longitude
+        units: degrees_east
+      LWP:
+        name: Leaf Water Potential
+        units: MPa
+      LWPpredawn:
+        name: Predawn Leaf Water Potential
+        units: MPa
+      opt:
+        name: Growing under ambient or stressed condition, or reference of data
+        options: opt, Feeney et al. 1998, Kolb & Stone 2000, Koepke & Kolb 2013, Xu & Baldochhi 2003, Chmura et al. 2016, Anderegg 2011, Resco et al. 2009, Arango-Velez et al. 2011, Choat 2006, Wolfe et al. 2016, Li et al. 2015, Sherman et al. 2004, Meinzer et al. 2004
+      OriginalFile:
+        options: deAngelis macchia species.xls, None
+      PARin:
+        name: Photosynthetically active radiation in cuvette
+        units: 1e-6 mol m-2 s-1
+      Pathway:
+        options: C3, C4, CAM
+      Patm:
+        name: Atmospheric pressure
+        units: kPa
+      Photo:
+        name: Photosynthetic rate
+        units: 1e-6 mol m-2 s-1
+      Plantform:
+        options: tree, shrub, grass, crop, savanna
+      Reference:
+        name: Reference of the data, note some of this information is in 'opt'
+        options: Martin-StPaul et al 2012, Limousin et al. 2013 PCE, None
+      RH:
+        name: Relative humidity
+        units: '%'
+      sampleheight:
+        name: not used, all NaN's
+      Season:
+        name: not used, all NaN's
+      Species:
+        name: Species name
+      SWC:
+        name: Soil water content
+        units: '?'
+      SWP:
+        name: not used, all NaN's
+      Tair:
+        name: Air temperature
+        units: degC
+      Time:
+        name: Measurement time
+      Tleaf:
+        name: Leaf temperature
+        units: degC
+      Totalheight:
+        name: '?'
+        options: 5.8 , 4.15, 3.15,  nan
+      Treatment:
+        options: Ambient, Dry site of Gradient, Intermediate site of the gradient, Irrigation, OTC CO2_amb, Wet site of the Gradient, None
+      Tregion:
+        options: arctic, boreal, temperate, tropical
+      Trmmol:
+        name: Leaf transpiration
+        units: 1e-3 mol m-2 s-1
+      Type:
+        options: gymnosperm, angiosperm, None
+      VPD:
+        name: Vapour pressure deficit
+        units: kPa
+      Wregion:
+        options: arid, semi-arid, dry sub-humid, humid
+      Wregion2:
+        name: Moisture index
+        units: '1'
+        note: the order of magnitude of this data added in from other sources (see the 'opt' column) is 2x greater
+
+
+  Saunders2021:
+    args:
+      urlpath: https://github.com/altazietsman/ML-stomatal-conductance-models/blob/master/Input%20Data/df.xlsx?raw=true
+    description: "This dataset, along with Anderegg2018, was used in the
+    publication 'Saunders, et al. (2021) Machine learning models perform better
+    than traditional empirical models for stomatal conductance when applied to
+    multiple tree species across different forest biomes'. See their github
+    [repository](https://github.com/altazietsman/ML-stomatal-conductance-models)
+    for more details."
+    driver: intake_excel.intake_excel.ExcelSource
+    metadata: {}
+
+
+  Han2022:
+    driver: intake.source.csv.CSVSource
+    args:
+      csv_kwargs:
+        dtype:
+          Fm: float64
+          Fm': float64
+          Fo: float64
+          Fs: float64
+          Tleaf: float64
+        names:
+        - Species name
+        - Tleaf
+        - LeafReplicateNumber
+        - PARi
+        - CO2R
+        - Ci
+        - Anet
+        - Fm'
+        - Fs
+        - VpdL
+        - Press
+        - OxygenPress
+        - Fo
+        - Fm
+        skiprows: 1
+      urlpath: 
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/Andropogon_gerardii.csv?sequence=4&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/Broadleaf_deciduous_liana_tropical.csv?sequence=5&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/Broadleaf_deciduous_shrub_temperate.csv?sequence=6&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/Broadleaf_deciduous_tree_boreal.csv?sequence=7&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/Broadleaf_deciduous_tree_temperate.csv?sequence=8&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/Broadleaf_deciduous_tree_tropical.csv?sequence=9&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/Broadleaf_evergreen_tree_tropical.csv?sequence=10&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/C3_Crop.csv?sequence=11&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/C3_Grass.csv?sequence=12&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/C4_Crop.csv?sequence=13&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/C4_Grass.csv?sequence=14&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/Cornus_racemosa_Cuyzam.csv?sequence=15&isAllowed=y
+      - https://ecommons.cornell.edu/bitstream/handle/1813/110978/Needleaf_evergreen_tree_boreal.csv?sequence=16&isAllowed=y
+      path_as_pattern: 'https://ecommons.cornell.edu/bitstream/handle/1813/110978/{PFT}.csv?sequence={sequence}&isAllowed=y'
+    description: "Data from: The Physiological Basis for Estimating
+    Photosynthesis from Chlorophyll a Fluorescence. Please cite as: Jimei Han,
+    Lianhong Gu, Yongjiang Zhang, Ying Sun. (2022) Data from: The Physiological
+    Basis for Estimating Photosynthesis from Chlorophyll a Fluorescence.
+    [dataset] Cornell University eCommons Repository.
+    https://doi.org/10.7298/q3hb-zq56"
+    metadata:
+      Species: 
+        name: species
+      Tleaf: 
+        name: leaf temperature
+        units: degC
+      LeafReplicateNumber: 
+        name: replicate number for individual leaf
+        units: '1'
+      PARi: 
+        name: photosynthetically active radiation
+        units: 1e-6 mol m-2 s-1
+      CO2R: 
+        name: reference CO2 concentration
+        units: 1e-6 mol mol-1
+      Ci:
+        name: intercellular CO2 concentration
+        units: 1e-6 mol mol-1
+      Anet: 
+        name: net photosynthesis
+        units: 1e-6 mol m-2 s-1
+      Fm': 
+        name: maximum chlorophyll a fluorescence under light
+        units: mV
+      Fs: 
+        name: steady-state chlorophyll a fluorescence under light
+        units: mV
+      VpdL: 
+        name: leaf-to-air vapour pressure deficit
+        units: kPa
+      Press: 
+        name: air pressure
+        units: kPa
+      OxygenPress:
+        name: the pressure of oxygen
+        units: kPa
+      Fo: 
+        name: minimum chlorophyll a fluorescence under fully dark-adapted conditions
+        units: mV 
+      Fm:
+        name: maximum chlorophyll a fluorescence under fully dark-adapted conditions
+        units: mV 
