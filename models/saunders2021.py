@@ -10,6 +10,7 @@ https://github.com/altazietsman/ML-stomatal-conductance-models/blob/master/Model
 import time
 
 import intake
+import numpy as np
 import pandas as pd
 from common import remove_outliers
 from sklearn.ensemble import AdaBoostRegressor, BaggingRegressor, RandomForestRegressor
@@ -81,7 +82,7 @@ for label, regr in regressors.items():
         {
             "method": label,
             "time": tfit,
-            "MSE": mean_squared_error(y_test, y_predict),
+            "RMSE": np.sqrt(mean_squared_error(y_test, y_predict)),
             "R2": r2_score(y_test, y_predict),
         }
     )
