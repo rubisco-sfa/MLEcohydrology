@@ -1,0 +1,9 @@
+<met_data_translator>
+  <env>
+    <leaf>
+      <par>'PARin'</par>
+      <temp>'Tleaf'</temp>
+      <vpd>'VPDleaf'</vpd>
+    </leaf>
+  </env>
+</met_data_translator>
