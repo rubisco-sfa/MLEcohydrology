@@ -221,7 +221,48 @@ sources:
     [repository](https://github.com/altazietsman/ML-stomatal-conductance-models)
     for more details."
     driver: intake_excel.intake_excel.ExcelSource
-    metadata: {}
+    metadata:
+      Cond:
+        name: Stomatal conductivity
+        units: mol m-2 s-1
+      ETR:
+        name: '?'
+        units: '?'
+      E_apparent:
+        name: '?'
+        units: '?'
+      Patm:
+        name: Atmospheric pressure
+        units: kPa
+      PhiPS2:
+        name: '?'
+        units: '?'
+      RH:
+        name: elative humidity
+        units: '%'
+      SWC:
+        name: Soil water content
+        units: m3 m-3
+      Species:
+        options: UXG, GXC
+      Tair:
+        name: Air temperature
+        units: degC
+      Tleaf:
+        name: Leaf temperature
+        units: degC
+      VPDleaf:
+        name: Vapor pressure deficit at leaf
+        units: kPa
+      date_time:
+        name: Record timestamp
+      soil:
+        name: Duplicate of SWC
+      solar:
+        name: Incoming solar irradiance
+        units: W m-2
+      wind:
+        name: All zeroes
 
 
   Han2022:
