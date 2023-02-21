@@ -3,7 +3,6 @@ import intake
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -16,6 +15,7 @@ def linear_model(
     train_features: pd.DataFrame,
     train_labels: pd.DataFrame,
     test_features: pd.DataFrame,
+    save_name: str = None,
 ):
     """."""
     normalizer = tf.keras.layers.Normalization(axis=-1)
@@ -32,6 +32,8 @@ def linear_model(
         verbose=1,
         validation_split=0.2,
     )
+    if save_name:
+        model.save(save_name)
     return model.predict(test_features).flatten()
 
 
@@ -39,6 +41,7 @@ def dnn_model(
     train_features: pd.DataFrame,
     train_labels: pd.DataFrame,
     test_features: pd.DataFrame,
+    save_name: str = None,
 ):
     """."""
     normalizer = tf.keras.layers.Normalization(axis=-1)
@@ -52,7 +55,7 @@ def dnn_model(
         ]
     )
     model.compile(
-        optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),
+        optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
         loss="mean_absolute_error",
     )
     model.fit(
@@ -62,6 +65,8 @@ def dnn_model(
         verbose=1,
         validation_split=0.2,
     )
+    if save_name:
+        model.save(save_name)
     return model.predict(test_features).flatten()
 
 
@@ -73,7 +78,7 @@ if not src.is_persisted:
 df = src.read().dropna()
 
 
-if True:
+if False:
     dfs = df[["VPD", "CO2S", "Tleaf", "Photo", "Cond"]]
     train = dfs.sample(frac=0.8, random_state=RANDOM_STATE)
     test = dfs.drop(train.index)
@@ -92,7 +97,7 @@ if True:
     fig.savefig("nn_linear.png")
     plt.close()
 
-if True:
+if False:
     dfs = df[["VPD", "CO2S", "Tleaf", "Photo", "Species", "Cond"]]
     dfs = pd.get_dummies(dfs, columns=["Species"])
     train = dfs.sample(frac=0.8, random_state=RANDOM_STATE)
@@ -113,7 +118,7 @@ if True:
     plt.close()
 
 if True:
-    dfs = df[["VPD", "CO2S", "Tleaf", "Photo", "Cond"]]
+    dfs = df[["CO2S", "PARin", "VPD", "Cond"]]
     train = dfs.sample(frac=0.8, random_state=RANDOM_STATE)
     test = dfs.drop(train.index)
     train_features = train.copy()
@@ -121,7 +126,7 @@ if True:
     test_features = test.copy()
     test_labels = test_features.pop("Cond")
     fig, ax = plt.subplots(figsize=(7, 7), tight_layout=True)
-    prediction = dnn_model(train_features, train_labels, test_features)
+    prediction = dnn_model(train_features, train_labels, test_features, "dnn.tf")
     ax.scatter(test_labels, prediction)
     ax.plot([0, test_labels.max()], [0, test_labels.max()], "--k")
     ax.axis("equal")
@@ -131,7 +136,7 @@ if True:
     fig.savefig("dnn.png")
     plt.close()
 
-if True:
+if False:
     dfs = df[["VPD", "CO2S", "Tleaf", "Photo", "Species", "Cond"]]
     dfs = pd.get_dummies(dfs, columns=["Species"])
     train = dfs.sample(frac=0.8, random_state=RANDOM_STATE)
