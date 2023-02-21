@@ -14,7 +14,7 @@ src = cat["Lin2015"]
 if not src.is_persisted:
     src.persist()
 df = src.read()
-df = df[["CO2S", "PARin", "VPD", "Cond"]]
+df = df[["CO2S", "PARin", "VPD", "Photo", "Cond"]]
 df = remove_outliers(df, verbose=True)
 x = df.drop(columns="Cond")
 y = df["Cond"]
