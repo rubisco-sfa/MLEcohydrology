@@ -49,8 +49,8 @@ def dnn_model(
     model = tf.keras.Sequential(
         [
             normalizer,
-            layers.Dense(64, activation="relu"),
-            layers.Dense(64, activation="relu"),
+            layers.Dense(32, activation="relu"),
+            layers.Dense(32, activation="relu"),
             layers.Dense(1),
         ]
     )
@@ -61,7 +61,7 @@ def dnn_model(
     model.fit(
         train_features,
         train_labels,
-        epochs=1000,
+        epochs=100,
         verbose=1,
         validation_split=0.2,
     )
@@ -118,7 +118,7 @@ if False:
     plt.close()
 
 if True:
-    dfs = df[["CO2S", "PARin", "VPD", "Cond"]]
+    dfs = df[["CO2S", "PARin", "VPD", "Photo", "Cond"]]
     train = dfs.sample(frac=0.8, random_state=RANDOM_STATE)
     test = dfs.drop(train.index)
     train_features = train.copy()
