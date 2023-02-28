@@ -8,70 +8,21 @@ sources:
     args:
       csv_kwargs:
         dtype:
-          PARin: float64
+          Funtype: str
+          Date: str
+          LAI: str
+          LWPpredawn: float
+          LightSource: str
+          SWC: float
+          SWP: float
+          Totalheight: str
+          sampleheight: float
         encoding: ISO-8859-1
         na_values: -9999.0
-      urlpath: https://figshare.com/ndownloader/files/1886204
-    description: "This database accompanies the publication 'Lin et al. (2015)
-    Optimal stomatal behaviour around the world. Nature Climate Change, 5,
-    459-464. For details on column definitions and units, please see the
-    [entry](https://figshare.com/articles/dataset/Optimal_stomatal_behaviour_around_the_world/1304289)
-    on figshare." 
+      urlpath: https://bitbucket.org/gsglobal/leafgasexchange/raw/23ee6bce1d3927b36eb868ecaea8f41aed7a33ec/WUEdatabase_2015-11-20_All_opt_full_params_bitbucket.csv
+    description: "Column definitions may be found in the [README](https://bitbucket.org/gsglobal/leafgasexchange/src/master/)"
     driver: intake.source.csv.CSVSource 
-    metadata:
-      CO2S:
-        name: CO2 concentration at leaf surface
-        units: ppm
-      Cond:
-        name: Stomatal conductance
-        units: mol m-2 s-1
-      Datacontrib:
-        name: Data contributor
-      Growthcond:
-        name: Growth condition
-      latitude:
-        name: Site latitude
-        units: Decimal degrees
-      Leafspan:
-        options: evergreen, deciduous
-      Location:
-        name: Site description
-      longitude:
-        name: Site longitude
-        units: Decimal degrees
-      opt:
-        name: Growing under ambient or stressed condition
-        options: opt, non-opt
-      PARin:
-        name: Photosynthetically active radiation in cuvette
-        units: 1e-6 mol m-2 s-1
-      Pathway:
-        options: C3, C4, CAM
-      Photo:
-        name: Photosynthetic rate
-        units: 1e-6 mol m-2 s-1
-      Plantform:
-        options: tree, shrub, grass, crop, savanna
-      Species:
-        name: Species name
-      Tleaf:
-        name: Leaf temperature
-        units: degC
-      Tregion:
-        options: arctic, boreal, temperate, tropical
-      Trmmol:
-        name: Leaf transpiration
-        units: 1e-3 mol m-2 s-1
-      Type:
-        options: gymnosperm, angiosperm
-      VPD:
-        name: Vapour pressure deficit
-        units: kPa
-      Wregion:
-        options: arid, semi-arid, dry sub-humid, humid
-      Wregion2:
-        name: Moisture index
-        units: '1'
+    metadata: {}
 
   Anderegg2018:
     args:
