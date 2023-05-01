@@ -8,7 +8,9 @@ df = pd.read_parquet("Lin2015_clm5.parquet")
 n0 = len(df)
 df = df[df[["Photo", "Tleaf", "PARin"]].notna().all(axis=1)]
 df = df[df["PARin"] > 0]
-print(len(df))
+print(
+    f"Pruning where Photo, Tleaf, or PARin are NaN, removes {(n0-len(df))/n0*100:.1f}% of the data"
+)
 
 fig = px.scatter(
     df,
