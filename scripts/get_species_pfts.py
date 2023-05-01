@@ -4,6 +4,7 @@ from difflib import get_close_matches
 import intake
 import numpy as np
 import pandas as pd
+import xarray as xr
 
 
 def clean_species(dfs: pd.DataFrame):
@@ -83,6 +84,40 @@ def pick_doaa(row, allow_close_matches=False):
     return "none"
 
 
+def pick_clm5_pft(row):
+    """."""
+    pft = row["PFT"]
+    if pft == "broadleaf evergreen shrub temperate":
+        return b"broadleaf_evergreen_shrub               "
+    if pft == "c3 grass":
+        return b"c3_non-arctic_grass                     "
+    if pft == "c4 grass":
+        return b"c4_grass                                "
+    if pft == "c3 unmanaged rainfed crop":
+        return b"c3_crop                                 "
+    lst = pft.split()
+    lst.append(lst.pop(-2))
+    return bytes(f"{'_'.join(lst):<40}", "utf-8")
+
+
+def pick_clm5_param(row, var):
+    """."""
+    sel = var.where(var["pftname"] == row["PFT CLM5"], drop=True)
+    sel = float(sel)
+    # assert sel.size == 1
+    return sel
+
+
+def print_doaa_difference(cdf: pd.DataFrame):
+    """A check on the difference between our categorization and Doaa's"""
+    cdf["Doaa"] = cdf.apply(pick_doaa, axis=1)
+    diff = cdf[cdf["PFT Abbreviation"] != cdf["Doaa"]]
+    for g, grp in diff.groupby(["PFT Abbreviation", "Doaa"]):
+        print(f"Our PFT ->  {g[0]} | {g[1]}  <- Doaa's PFT")
+        print("Species involved: ", ", ".join(grp["Species"].unique()))
+        print("")
+
+
 cat = intake.open_catalog("../leaf-level.yaml")
 df_pft = pd.read_html(
     "https://escomp.github.io/ctsm-docs/versions/release-clm5.0/html/tech_note/Ecosystem/CLM50_Tech_Note_Ecosystem.html"
@@ -105,12 +140,12 @@ df_doaa = clean_species(df_doaa)
 
 df["PFT"] = df.apply(pick_pft, axis=1)
 df["IVT"] = df.apply(pick_ivt, axis=1)
-df["PFT Abbreviation"] = df.apply(pick_abbr, axis=1)
-df["Doaa"] = df.apply(pick_doaa, axis=1)
-
 assert len(df[df["IVT"].isna()]["PFT"].unique()) == 0
-diff = df[df["PFT Abbreviation"] != df["Doaa"]]
-for g, grp in diff.groupby(["PFT Abbreviation", "Doaa"]):
-    print(f"Our PFT ->  {g[0]} | {g[1]}  <- Doaa's PFT")
-    print("Species involved: ", ", ".join(grp["Species"].unique()))
-    print("")
+df["PFT Abbreviation"] = df.apply(pick_abbr, axis=1)
+df["PFT CLM5"] = df.apply(pick_clm5_pft, axis=1)
+
+
+clm5 = xr.open_dataset("clm5_params.c171117.nc")
+df["g1_medlyn"] = df.apply(pick_clm5_param, axis=1, args=(clm5["medlynslope"],))
+df["g0"] = df.apply(pick_clm5_param, axis=1, args=(clm5["medlynintercept"],)) * 1e-6
+df.to_parquet("Lin2015_clm5.parquet")
