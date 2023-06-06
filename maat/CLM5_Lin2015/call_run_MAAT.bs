@@ -1,0 +1,45 @@
+#!/bin/bash
+
+RUNID=$1
+
+SDIR="${MAAT_DIR}/src"
+PDIR="${PWD}"
+MOBJ="leaf"
+ 
+##########################################
+###  CHOOSE WHICH MODEL RUN TO SIMULATE
+
+# CLM5 setup using default inputs
+# ARGS="srcdir<-'${SDIR}' pdir<-'${PDIR}' mod_obj<-'${MOBJ}' runid<-'CLM5' salt<-T factorial<-F procSA<-F rbind<-T"
+# CLM5 setup using Lin2015 inputs
+ARGS="srcdir<-'${SDIR}' pdir<-'${PDIR}' mod_obj<-'${MOBJ}' runid<-'LinInputs_CLM5' salt<-T factorial<-F procSA<-F rbind<-T"
+
+##########################################
+### DO NOT MODIFY ANYTHING BELOW THIS LINE
+
+# date for labelling log files
+YMD=`date +%Y-%m-%d`
+
+LOGF="${PDIR}/logs/${YMD}_runlog.txt"
+if [[ ! -z $RUNID ]]; then
+  ARGS="${ARGS} runid<-'${RUNID}'" 
+  LOGF="${PDIR}/logs/${YMD}_${RUNID}_runlog.txt"
+fi
+
+# run MAAT
+cd $SDIR
+if [[ $ARGS =~ 'restart' ]]; then
+  echo >> $LOGF
+  echo >> $LOGF
+  echo >> $LOGF
+  echo =========================================== >> $LOGF
+  echo Restart >> $LOGF
+  echo >> $LOGF
+  Rscript run_MAAT.R ${ARGS} >> $LOGF
+else
+  Rscript run_MAAT.R ${ARGS} > $LOGF
+fi
+
+
+
+### END ###
