@@ -1,10 +1,29 @@
 """."""
 from difflib import get_close_matches
+from typing import List
 
 import intake
 import numpy as np
 import pandas as pd
 import xarray as xr
+
+
+def remove_outliers(
+    df0: pd.DataFrame, columns: List = None, verbose: bool = False, outlier: float = 3.0
+) -> pd.DataFrame:
+    """Removes rows where any column has data greater than 3 standard deviations
+    from the mean. If 'columns' are specified, only include these in the
+    calculation."""
+    df_include = df0 if columns is None else df0[columns]
+    df_reduced = df0[
+        ((np.abs(df_include - df_include.mean()) / df_include.std()) < outlier).all(
+            axis=1
+        )
+    ]
+    nrm = len(df0) - len(df_reduced)
+    if verbose:
+        print(f"Removed {nrm} rows ({100*nrm/len(df0):.1f}%) marked as outliers.")
+    return df_reduced
 
 
 def clean_species(dfs: pd.DataFrame):
@@ -144,8 +163,12 @@ assert len(df[df["IVT"].isna()]["PFT"].unique()) == 0
 df["PFT Abbreviation"] = df.apply(pick_abbr, axis=1)
 df["PFT CLM5"] = df.apply(pick_clm5_pft, axis=1)
 
-
 clm5 = xr.open_dataset("clm5_params.c171117.nc")
 df["g1_medlyn"] = df.apply(pick_clm5_param, axis=1, args=(clm5["medlynslope"],))
 df["g0"] = df.apply(pick_clm5_param, axis=1, args=(clm5["medlynintercept"],)) * 1e-6
 df.to_parquet("Lin2015_clm5.parquet")
+
+# Create a PFT-specific file
+df = df[df["IVT"] == 7]  # broadleaf deciduous temperature tree
+df = remove_outliers(df, columns=["CO2S", "PARin", "RH", "Tleaf"], verbose=True)
+df.to_csv("../maat/Lin2015_cleaned_BDTT.csv")
