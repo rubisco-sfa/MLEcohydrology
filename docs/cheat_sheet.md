@@ -47,3 +47,13 @@ df[(df['PFT']=='broadleaf deciduous tree temperate') & (df['Species']=='acer rub
 ```
 
 Note you need to encase each boolean check inside parenthesis.
+
+## Version Control with Git
+
+* Every git respository stands on its own and has complete information about how to reconstruct files byt storing file differences.
+* When you `clone` a repository, you have made a total copy of the entire history and put it on your machine to do with what you will.
+* You can make commits to your clone, and the original doesn't know anything about them.
+* Sometimes, the original (say on github) will update and you would like to get those updates. For this you can say `git fetch`. If you want to update your branch, `git update`. The more commonly used `git pull = git fetch + git update`.
+* `git status` checks the status of your local cloned repostory. It will tell if you have changed files that it is tracking.
+
+
