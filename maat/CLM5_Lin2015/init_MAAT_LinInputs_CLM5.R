@@ -130,17 +130,19 @@ pars_eval.var <- NULL
 
 # define variable ENVIRONMENTAL VARIABLES
 env.var       <- list(
-  ca_conc = dat[c(1:2872),"CO2S"],
-  # par = dat[c(1:170),"PARin"],
-  #rh = dat[c(1:100),"RH"]/100,
-  temp = dat[c(1:2872),"Tleaf"]
+  ca_conc = dat$CO2S,
+  par = dat$PARin,
+  rh = dat$RH,
+  temp = dat$Tleaf
 )
-# #env.var <- NULL
-# env.var       <- list(
-#   ca_conc = seq(50,1500,50)
-# )
-
-
+# # #env.var <- NULL
+# # env.var       <- list(
+#   ca_conc = dat[c(1:2872),"CO2S"],
+#   par = dat[c(1:170),"PARin"],
+#   rh = dat[c(1:100),"RH"]/100,
+#   temp = dat[c(1:2872),"Tleaf"]
+# #   ca_conc = seq(50,1500,50)
+# # )
 
 
 
