@@ -5,7 +5,7 @@ dat = read.csv("../Lin2015_cleaned_BDTT.csv",strip.white=T)
 # define static FUNCTIONS
 fnames.static <- list(
   gstar           = 'f_gstar_constref',
-  vcmax           = 'f_vcmax_lin',
+  vcmax           = 'f_vcmax_constant',
   jmax           = 'f_jmax_lin',
   tpu           = 'f_tpu_lin',   
   tcor_asc = list(  
@@ -38,7 +38,7 @@ fnames.static <- list(
   Ajg       = 'f_Ajg_generic', 
   Apg       = 'f_Apg_vonc2000',
   gas_diff  = 'f_gas_diff_ficks_ci', 
-  rd        = 'f_rd_lin_vcmax', 
+  rd        = 'f_rd_lin_N', # <!-- calculate Rd at <reftemp.rd>, f(Vcmax), f(N), -->
   rl_rd     = 'f_rl_rd_fixed',
   ri        = 'f_r_zero',
   rs        = 'f_rs_ball1987', 
@@ -52,22 +52,24 @@ fnames.static <- list(
 pars.static <- list(
   a = 0.85,
   f = 0.15,
+  ko_kc_ratio = 0.21,
   theta_j = 0.7,
-  theta_col_cj = 0.98, 
-  theta_col_cjp = 0.95, 
+  theta_col_cj = 0.999, 
+  theta_col_cjp = 0.999, 
   ajv_25 = 0,
-  bjv_25 = 1.97,
+  bjv_25 = 1.67,
   atv_25 = 0,
   btv_25 = 0.16667,
-  flnr = 0.0461,
-  fnr = 7.16,
-  Rsa = 60,
   Apg_alpha = 0,
   g0 = 0.01,
-  g1_ball = 9,
-  a_rdv_25 = 0.0,
-  b_rdv_25 = 0.015,
+  g1_ball = 8,
+  a_rdn_25 = 0.5,
+  b_rdn_25 = 0.15,  
   rl_rd_ratio = 1,
+  rl_rd_lloyd_a = 0.5,
+  rl_rd_lloyd_b = 0.05,
+  a_rdv_25_t = 0.015,
+  b_rdv_25_t = -0.0005,
   reftemp = list(
     rd = 25,
     vcmax = 25,
@@ -78,40 +80,43 @@ pars.static <- list(
     gstar = 25
      ),
   atref = list(
+    rd = 0.716,
+    vcmax = 50,
     Kc = 40.49,
     Ko = 27.84,
     gstar = 4.275
      ),
   Ha = list(
-    rd = 46390,
-    vcmax = 1000, #65330,
+    vcmax = 65330,
     jmax = 43540,
-    tpu = 65330,
+    rd = 46390,
+    tpu = 53100,
     Kc = 79430,
     Ko = 36380,
     gstar = 37830
      ), 
+  q10 = list(
+    rd = 2
+     ), 
   Hd = list(
-    rd = 150650,
     vcmax = 149250,
     jmax = 152040,
-    tpu = 149250
+    tpu = 150650,
+    rd = 150650
      ), 
   deltaS = list(
-    rd = 490,
     vcmax = 485,
     jmax = 495,
-    tpu = 485
-     ),        
+    tpu = 490,
+    rd = 490
+     ),  
   R = 8.31446
 )
 
 # define static ENVIRONMENTAL VARIABLES
 env.static <- list(
-  o2_conc = 0.21,
-  atm_press = 101325
+  o2_conc = 0.21
 )  
-
 
 
 # ********************************** Variable Options **********************************
@@ -143,7 +148,6 @@ env.var       <- list(
 #   temp = dat[c(1:2872),"Tleaf"]
 # #   ca_conc = seq(50,1500,50)
 # # )
-
 
 
 ################################## Combine the functions, parameters, and environment static and variable lists into a single list 
