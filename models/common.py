@@ -21,3 +21,6 @@ def remove_outliers(
     if verbose:
         print(f"Removed {nrm} rows ({100*nrm/len(df0):.1f}%) marked as outliers.")
     return df_reduced
+
+def get_number_of_parameters(model):
+    return np.sum([np.prod(v.get_shape()) for v in model.trainable_weights])
