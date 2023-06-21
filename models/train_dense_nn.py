@@ -1,6 +1,7 @@
 import itertools
 import os
 import random
+import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -70,6 +71,8 @@ class EarlyStoppingAtMinLoss(tf.keras.callbacks.Callback):
 COLUMNS = ["VPD", "CO2S", "Tleaf", "PARin"]
 RANDOM_STATE = 1
 TARGET = "Photo"
+if len(sys.argv) > 1:
+    TARGET = sys.argv[1]
 
 # layers are initialized randomly, to ensure reproducible results we need to set
 # a lot of seeds
