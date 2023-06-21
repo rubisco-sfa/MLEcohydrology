@@ -67,7 +67,7 @@ class EarlyStoppingAtMinLoss(tf.keras.callbacks.Callback):
             print(f"Epoch {self.stopped_epoch+1}: early stopping")
 
 
-COLUMNS = ["VPD", "CO2S", "Tleaf", "Photo", "PARin", "Cond"]
+COLUMNS = ["VPD", "CO2S", "Tleaf", "PARin"]
 RANDOM_STATE = 1
 TARGET = "Photo"
 
@@ -80,6 +80,7 @@ random.seed(RANDOM_STATE)
 
 # read in the leaf level data
 df = pd.read_csv("../maat/Lin2015_cleaned_BDTT.csv")
+COLUMNS.append(TARGET)
 df = remove_outliers(df, columns=COLUMNS, verbose=True)
 dfs = df[COLUMNS]
 
