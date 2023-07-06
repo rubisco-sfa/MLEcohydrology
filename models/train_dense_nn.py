@@ -11,6 +11,11 @@ from common import get_number_of_parameters, remove_outliers
 from tensorflow.keras import layers
 
 
+def round_sigdigits(x, digits=1):
+    """Return x rounded to the specified number of significant digits."""
+    return round(x, -int(np.floor(np.log10(np.abs(x)) - digits + 1)))
+
+
 class EarlyStoppingAtMinLoss(tf.keras.callbacks.Callback):
     """Stop training when the loss is at its min.
 
@@ -97,7 +102,11 @@ test_labels = test_features.pop(TARGET)
 normalizer = tf.keras.layers.Normalization(axis=-1)
 normalizer.adapt(train_features)
 
-# setup Latin hypercube parameter experiment
+# we are going to train a few nets, keep some stats in a dataframe so we can pick the
+# best at the end of the process.
+results = []
+
+#  setup Latin hypercube parameter experiment
 learning_rates = [1e-2]
 neurons = 2.0 ** np.arange(3, 6)
 nlayers = [1, 2]
@@ -131,11 +140,30 @@ for learning_rate, neuron, nlayer, activation in itertools.product(
             EarlyStoppingAtMinLoss(rate_patience=3, end_patience=5, max_reduction=1e-3)
         ],
     )
+    history = model.history.history  # this will get reset when we evaluate, so store
+    test_predictions = model.predict(test_features)
+    train_predictions = model.predict(train_features)
+    mse = model.evaluate(test_features, test_labels)
+    corr = np.corrcoef(test_labels, test_predictions.flatten())[0, 1]
+    df[f"{TARGET}{count:02d}"] = model.predict(dfs.drop(columns=TARGET))
+
+    # saving the error measures to 3 sigdigits so we can sort out models which provide
+    # approximately the same error.
+    results.append(
+        {
+            "name": f"{TARGET}{count:02d}",
+            "num_parameters": num_params,
+            "mean_squared_error": round_sigdigits(mse, 3),
+            "correlation": round_sigdigits(corr, 3),
+            "activation": activation,
+            "model": model,
+        }
+    )
 
     # plot the training history
     fig, axs = plt.subplots(figsize=(10, 5), ncols=2, tight_layout=True)
     last_epoch = None
-    for loss, history in model.history.history.items():
+    for loss, history in history.items():
         axs[0].semilogy(history, label=loss)
         if last_epoch is None:
             last_epoch = len(history)
@@ -144,7 +172,6 @@ for learning_rate, neuron, nlayer, activation in itertools.product(
     f={num_params/len(train_labels)*100:.1f}%
     {activation}
     """
-    mse = model.evaluate(test_features, test_labels)
     axs[0].plot(last_epoch - 1, mse, "ok", label="test_loss", ms=3)
     axs[0].legend(loc=2)
     axs[0].set_xlabel("Epoch")
@@ -160,8 +187,6 @@ for learning_rate, neuron, nlayer, activation in itertools.product(
     axs[0].set_title("Training Information")
 
     # plot the performance of the train and test data
-    test_predictions = model.predict(test_features)
-    train_predictions = model.predict(train_features)
     axs[1].scatter(train_labels, train_predictions, label="train", s=7)
     axs[1].scatter(test_labels, test_predictions, label="test", s=5)
     vmax = max(test_labels.max(), test_predictions.max())
@@ -170,7 +195,7 @@ for learning_rate, neuron, nlayer, activation in itertools.product(
     axs[1].set_xlabel("True Values")
     axs[1].set_ylabel("Predicted Values")
     label = f"""test_MSE={mse:1.2e}
-R={np.corrcoef(test_labels, test_predictions.flatten())[0,1]:.3f}"""
+R={corr:.3f}"""
     axs[1].text(
         0.02,
         0.98,
@@ -184,3 +209,10 @@ R={np.corrcoef(test_labels, test_predictions.flatten())[0,1]:.3f}"""
     fig.savefig(f"{TARGET}{count:03d}.png")
     plt.close()
     count += 1
+
+# save the 'best' model
+results = pd.DataFrame(results)
+print(
+    results.sort_values(["mean_squared_error", "correlation", "num_parameters"]).iloc[0]
+)
+df.to_csv("Lin2015_BDTT_Photo_NN.csv")
