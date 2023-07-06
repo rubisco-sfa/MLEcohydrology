@@ -145,11 +145,13 @@ for learning_rate, neuron, nlayer, activation in itertools.product(
     train_predictions = model.predict(train_features)
     mse = model.evaluate(test_features, test_labels)
     corr = np.corrcoef(test_labels, test_predictions.flatten())[0, 1]
+    df[f"{TARGET}{count:02d}"] = model.predict(dfs.drop(columns=TARGET))
 
     # saving the error measures to 3 sigdigits so we can sort out models which provide
     # approximately the same error.
     results.append(
         {
+            "name": f"{TARGET}{count:02d}",
             "num_parameters": num_params,
             "mean_squared_error": round_sigdigits(mse, 3),
             "correlation": round_sigdigits(corr, 3),
@@ -210,7 +212,7 @@ R={corr:.3f}"""
 
 # save the 'best' model
 results = pd.DataFrame(results)
-model = results.sort_values(
-    ["mean_squared_error", "correlation", "num_parameters"]
-).iloc[0]["model"]
-model.save(TARGET)
+print(
+    results.sort_values(["mean_squared_error", "correlation", "num_parameters"]).iloc[0]
+)
+df.to_csv("Lin2015_BDTT_Photo_NN.csv")
